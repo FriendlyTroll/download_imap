@@ -55,8 +55,9 @@ def process_mailbox(M):
             print("ERROR getting message", subject)
             return
         print("Writing message ", subject)
-        # Write filename as mail number, from, and subject line
-        f = open('%s/%s--%s--%s.eml' %(OUTPUT_DIRECTORY, num, from_m, subject), 'wb')
+        # Write filename as mail number, from, and subject line; delete forward slash to
+        # prevent interpreting subject as a file path
+        f = open(f'{OUTPUT_DIRECTORY}/{num.decode("utf-8")}--{from_m}--{subject.replace("/","")}.eml', 'wb')
         f.write(data[0][1])
         f.close()
 
