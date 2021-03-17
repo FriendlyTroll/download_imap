@@ -9,16 +9,30 @@ import sys
 import imaplib
 import getpass
 import email
+import os
 
 IMAP_SERVER = 'imap.gmail.com'
-EMAIL_ACCOUNT = "user@gmail.com"
+
+# Set email here or pass it as first argument
+EMAIL_ACCOUNT = ""
+if not EMAIL_ACCOUNT:
+    EMAIL_ACCOUNT = str(sys.argv[1])
+
 # Chose folder below
 # EMAIL_FOLDER = "INBOX"
 # EMAIL_FOLDER = '"[Gmail]/Sent Mail"' # note the double quoting
 EMAIL_FOLDER = '"[Gmail]/All Mail"'
-OUTPUT_DIRECTORY = '/tmp/mails'
 
-PASSWORD = getpass.getpass()
+# Download emails into current directory or set a custom path on cmdline
+if len(sys.argv) > 2:
+    OUTPUT_DIRECTORY = str(sys.argv[2])
+else:
+    OUTPUT_DIRECTORY = os.getcwd()
+
+# Set password here or the script will get it from cmd line
+PASSWORD = ""
+if not PASSWORD:
+    PASSWORD = getpass.getpass()
 
 
 def process_mailbox(M):
