@@ -10,6 +10,7 @@ import imaplib
 import getpass
 import email
 import os
+import errno
 
 IMAP_SERVER = 'imap.gmail.com'
 
@@ -57,9 +58,22 @@ def process_mailbox(M):
         print("Writing message ", subject)
         # Write filename as mail number, from, and subject line; delete forward slash to
         # prevent interpreting subject as a file path
-        f = open(f'{OUTPUT_DIRECTORY}/{num.decode("utf-8")}--{from_m}--{subject.replace("/","")}.eml', 'wb')
-        f.write(data[0][1])
-        f.close()
+        try:
+            f = open(f'{OUTPUT_DIRECTORY}/{num.decode("utf-8")}--{from_m}--{subject.replace("/","")}.eml', 'wb')
+            f.write(data[0][1])
+            f.close()
+        except OSError as exc:
+            if exc.errno == errno.ENAMETOOLONG:
+                print("!!! >>> Filename too long. Truncating subject line to 150 chars")
+                f = open(f'{OUTPUT_DIRECTORY}/{num.decode("utf-8")}--{from_m}--{subject[:150].replace("/","")}.eml', 'wb')
+                f.write(data[0][1])
+                f.close()
+            else:
+                print(exc)
+        except AttributeError as e:
+            print(f"Couldn't write email due to {e}") 
+            continue
+
 
 def main():
     M = imaplib.IMAP4_SSL(IMAP_SERVER)
