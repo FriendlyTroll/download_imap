@@ -8,6 +8,11 @@ Simple Python script to dump all emails in an IMAP folder to files.
 
 or set the mail and destination folder in the script itself.
 
+# Notes
+## Gmail
+- Make sure the IMAP is enabled
+- Also turn on Less secure app access
+
 Based on scripts from here
 
 - https://gist.github.com/robulouski/7442321
